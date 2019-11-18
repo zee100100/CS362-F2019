@@ -1,0 +1,70 @@
+        -:    0:Source:testme.c
+        -:    0:Graph:testme.gcno
+        -:    0:Data:testme.gcda
+        -:    0:Runs:3
+        -:    0:Programs:1
+        -:    1:#include<stdio.h>
+        -:    2:#include<string.h>
+        -:    3:#include<stdlib.h>
+        -:    4:#include<time.h>
+        -:    5:
+  7296396:    6:char inputChar()
+        -:    7:{
+        -:    8:    // TODO: rewrite this function
+  7296396:    9:    int c = rand() % 96 + 32;
+  7296396:   10:    return (char) c;
+        -:   11:}
+        -:   12:
+  1216066:   13:char *inputString()
+        -:   14:{
+        -:   15:    // TODO: rewrite this function
+        -:   16:    static char str[6];
+        -:   17:    int i;
+        -:   18:
+  7296396:   19:    for (i=0; i < 5; i++)
+  6080330:   20:        str[i] = inputChar();
+  1216066:   21:    str[5] = '\0';
+  1216066:   22:    return str;
+        -:   23:}
+        -:   24:
+        3:   25:void testme()
+        -:   26:{
+        3:   27:  int tcCount = 0;
+        -:   28:  char *s;
+        -:   29:  char c;
+        3:   30:  int state = 0;
+        3:   31:  time_t start = time(NULL);
+        3:   32:  while (time(NULL) - start < 7)
+        -:   33:  {
+  1216066:   34:    tcCount++;
+  1216066:   35:    c = inputChar();
+  1216066:   36:    s = inputString();
+  1216066:   37:    printf("Iteration %d: c = %c, s = %s, state = %d\n", tcCount, c, s, state);
+        -:   38:
+  1216066:   39:    if (c == '[' && state == 0) state = 1;
+  1216066:   40:    if (c == '(' && state == 1) state = 2;
+  1216066:   41:    if (c == '{' && state == 2) state = 3;
+  1216066:   42:    if (c == ' '&& state == 3) state = 4;
+  1216066:   43:    if (c == 'a' && state == 4) state = 5;
+  1216066:   44:    if (c == 'x' && state == 5) state = 6;
+  1216066:   45:    if (c == '}' && state == 6) state = 7;
+  1216066:   46:    if (c == ')' && state == 7) state = 8;
+  1216066:   47:    if (c == ']' && state == 8) state = 9;
+  1216066:   48:    if (s[0] == 'r' && s[1] == 'e'
+      111:   49:       && s[2] == 's' && s[3] == 'e'
+    #####:   50:       && s[4] == 't' && s[5] == '\0'
+    #####:   51:       && state == 9)
+        -:   52:    {
+    #####:   53:      printf("error ");
+    #####:   54:      exit(200);
+        -:   55:    }
+        -:   56:  }
+        3:   57:}
+        -:   58:
+        -:   59:
+        3:   60:int main(int argc, char *argv[])
+        -:   61:{
+        3:   62:    srand(time(NULL));
+        3:   63:    testme();
+        3:   64:    return 0;
+        -:   65:}
