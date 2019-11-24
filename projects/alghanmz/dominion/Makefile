@@ -1,31 +1,34 @@
 CFLAGS= -Wall -fpic -coverage -lm -std=c99
 
+unittestresults: randomtestcard1 randomtestcard2 randomtestcard3 runtests
+
 rngs.o: rngs.h rngs.c
-	gcc -c rngs.c -g  $(CFLAGS)
+	gcc -c rngs.c $(CFLAGS)
 
 dominion.o: dominion.h dominion.c rngs.o
-	gcc -c dominion.c -g  $(CFLAGS)
+	gcc -c dominion.c $(CFLAGS)
 
-playdom: dominion.o playdom.c
-	gcc -o playdom playdom.c -g dominion.o rngs.o $(CFLAGS)
-#To run playdom you need to entere: ./playdom <any integer number> like ./playdom 10*/
+randomtestcard1: dominion.o rngs.o randomtestcard1.c
+	gcc -o randomtestcard1 randomtestcard1.c dominion.o rngs.o $(CFLAGS)
+	#./randomtestcard1
 
-testDrawCard: testDrawCard.c dominion.o rngs.o
-	gcc  -o testDrawCard -g  testDrawCard.c dominion.o rngs.o $(CFLAGS)
+randomtestcard2: dominion.o rngs.o randomtestcard2.c
+	gcc -o randomtestcard2 randomtestcard2.c dominion.o rngs.o $(CFLAGS)
+	#./randomtestcard2
 
-interface.o: interface.h interface.c
-	gcc -c interface.c -g  $(CFLAGS)
+randomtestcard3: dominion.o rngs.o randomtestcard3.c
+	gcc -o randomtestcard3 randomtestcard3.c dominion.o rngs.o $(CFLAGS)
+	#./randomtestcard3
 
-runtests: testDrawCard 
-	./testDrawCard &> unittestresult.out
-	gcov dominion.c >> unittestresult.out
-	cat dominion.c.gcov >> unittestresult.out
-
-
-player: player.c interface.o
-	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
-
-all: playdom player 
+#ifeq (0,1)
+runtests: randomtestcard1 randomtestcard2 randomtestcard3
+	./randomtestcard1 > randomtestresults.out
+	gcov -b -f dominion.c >> randomtestresults.out
+	./randomtestcard2 >> randomtestresults.out
+	gcov -b -f dominion.c >> randomtestresults.out
+	./randomtestcard3 >> randomtestresults.out
+	gcov -b -f dominion.c >> randomtestresults.out
+#endif
 
 clean:
-	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+	rm -f *.o randomtestcard1 randomtestcard2 randomtestcard3 *.gcov *.gcda *.gcno *.out
